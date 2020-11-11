@@ -5,7 +5,9 @@
       class="title mb-5"
     >
       <v-card-text class="title">
-        {{ currentDoc.text }}
+        <pre v-hljs >
+          <code class="java" style="white-space: pre-wrap; background: #2b2b2b; color: #bababa" v-text="currentDoc.text" />
+        </pre>
       </v-card-text>
     </v-card>
     <seq2seq-box

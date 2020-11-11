@@ -6,13 +6,19 @@
   >
     <template v-slot:activator="{ on }">
       <span :style="{ borderColor: color }" class="highlight bottom" v-on="on">
-        <span class="highlight__content">{{ content }}<v-icon class="delete" @click.stop="remove">mdi-close-circle</v-icon></span><span :data-label="label" :style="{ backgroundColor: color, color: textColor }" class="highlight__label" />
+        <span class="highlight__content">
+          <pre v-hljs >
+            <code class="java" style="white-space: pre-wrap; background: #2b2b2b; color: #bababa" v-text="content" />
+          </pre>
+          <v-icon class="delete" @click.stop="remove">mdi-close-circle</v-icon>
+        </span>
+        <span :data-label="label" :style="{ backgroundColor: color, color: textColor }" class="highlight__label" />
       </span>
     </template>
     <v-list
       dense
       min-width="150"
-      max-height="400"
+      max-height="16"
       class="overflow-y-auto"
     >
       <v-list-item
@@ -31,7 +37,11 @@
       </v-list-item>
     </v-list>
   </v-menu>
-  <span v-else :class="[newline ? 'newline' : '']">{{ content }}</span>
+  <span v-else :class="[newline ? 'newline' : '']">
+    <pre v-hljs >
+      <code class="java" style="white-space: pre-wrap; background: #2b2b2b; color: #bababa" v-text="content" />
+    </pre>
+  </span>
 </template>
 
 <script>
