@@ -2,7 +2,7 @@ FROM node:13.7-alpine
 
 WORKDIR /app
 
-COPY . /app/
+COPY . .
 
 RUN apk add -U --no-cache git python3 make g++ \
   # && npm install -g yarn@latest \
