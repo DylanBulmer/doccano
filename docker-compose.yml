@@ -1,43 +1,59 @@
-version: "3"
+version: "3.7"
 services:
 
-  django:
-    image: python:3.6
+  backend:
+    build: ./app
+    command: ["/app/tools/run.sh"]
     volumes:
-      - .:/src
-      - venv:/src/venv
-    command: ["/src/tools/dev-django.sh", "0.0.0.0:8000"]
+      - static_volume:/app/staticfiles
     environment:
       ADMIN_USERNAME: "admin"
       ADMIN_PASSWORD: "password"
       ADMIN_EMAIL: "admin@example.com"
       DATABASE_URL: "postgres://doccano:doccano@postgres:5432/doccano?sslmode=disable"
-      ALLOW_SIGNUP: "False" 
-    ports:
-      - 8000:8000
+      ALLOW_SIGNUP: "False"
+      DEBUG: "False"
+    depends_on:
+      - postgres
+    networks:
+      - network-backend
+      - network-frontend
 
-  webpack:
-    image: node:8
+  frontend:
+    build: ./frontend
     volumes:
-      - .:/src
-      - node_modules:/src/app/server/static/node_modules
-    command: ["/src/tools/dev-webpack.sh"]
+      - www:/src/dist
     environment:
-      WEBPACK_HOST: "0.0.0.0"
-      WEBPACK_PORT: "8080"
-      WEBPACK_POLL_MILLIS: "1000"
+      GOOGLE_TRACKING_ID: ""
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - www:/var/www/html:ro
+      - static_volume:/static
     ports:
-      - 8080:8080
+      - 80:80
+    depends_on:
+      - backend
+    networks:
+      - network-frontend
 
   postgres:
-    image: postgres:9.6
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
     environment:
       POSTGRES_USER: "doccano"
       POSTGRES_PASSWORD: "doccano"
       POSTGRES_DB: "doccano"
-    ports:
-      - 5432:5432
+    networks:
+      - network-backend
 
 volumes:
-  node_modules:
-  venv:
+  postgres_data:
+  static_volume:
+  www:
+
+networks:
+  network-backend:
+  network-frontend:
