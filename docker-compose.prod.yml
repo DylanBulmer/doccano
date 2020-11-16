@@ -22,7 +22,7 @@ services:
   frontend:
     build: ./frontend
     volumes:
-      - www:/app/dist
+      - www:/src/dist
     environment:
       GOOGLE_TRACKING_ID: ""
 
