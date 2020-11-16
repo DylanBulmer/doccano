@@ -23,11 +23,10 @@ services:
       - network-frontend
 
   frontend:
-    image: node:13.7.0
-    command: ["/src/frontend/dev-nuxt.sh"]
+    build: ./frontend
     volumes:
       - .:/src
-      - node_modules:/src/frontend/node_modules
+      - node_modules:/src/node_modules
     ports:
       - 3000:3000
     depends_on:
